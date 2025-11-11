@@ -337,10 +337,6 @@ Los indicadores de comparación de períodos tienen lógica contextual:
 - Alertas cuando se exceden límites
 - Reportes mensuales para tomar decisiones
 
-## 👨‍💻 Autor
-
-Desarrollado Gropo 5 
-
 ## 📞 Soporte
 
 Si tienes preguntas o problemas:
