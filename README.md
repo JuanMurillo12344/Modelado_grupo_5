@@ -339,7 +339,7 @@ Los indicadores de comparación de períodos tienen lógica contextual:
 
 ## 👨‍💻 Autor
 
-Desarrollado con ❤️ por Christian Conforme
+Desarrollado por Grupo 5
 
 ## 📞 Soporte
 
