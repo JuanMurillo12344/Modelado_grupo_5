@@ -13,6 +13,7 @@ export default function AdminPage() {
   console.log("Admin Page - User:", user)
   console.log("Admin Page - User Role:", user?.role)
 
+  
   if (!user || user?.role !== "admin") {
     return (
       <div className="p-4 md:p-6">

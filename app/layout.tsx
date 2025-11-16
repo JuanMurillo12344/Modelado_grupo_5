@@ -12,6 +12,7 @@ import "./globals.css"
 const _geistSans = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
+
 export const metadata: Metadata = {
   title: "FinanzApp - Gestor de Finanzas Personales",
   description: "Gestiona tus finanzas personales de manera fácil y eficiente",

@@ -101,7 +101,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 Para probar la aplicación, puedes crear nuevas cuentas o usar estas credenciales de ejemplo:
 
 ### Usuario Regular
-- Email: `admin@gmail.com`
+- Email: `user@gmail.com`
 - Password: `12345`
 
 ### Admin
@@ -337,10 +337,13 @@ Los indicadores de comparación de períodos tienen lógica contextual:
 - Alertas cuando se exceden límites
 - Reportes mensuales para tomar decisiones
 
+<<<<<<< HEAD
 ## 👨‍💻 Autor
 
 Desarrollado por Grupo 5
 
+=======
+>>>>>>> 4d55431347a3a53cd12ae3d55543afa27696157f
 ## 📞 Soporte
 
 Si tienes preguntas o problemas:
