@@ -1,5 +1,6 @@
 import { sql } from "@/lib/db"
 
+// Esta Interfaz es que define la estructura de los datos necesarios para crear una notificación
 export interface NotificationData {
   userId: number
   type: "transaction" | "budget" | "system" | "alert" | 
@@ -12,6 +13,8 @@ export interface NotificationData {
 
 export async function createNotification(data: NotificationData): Promise<void> {
   const { userId, type, title, message, icon = "🔔" } = data
+
+// Inserta la notificación en la tabla 'notifications'
 
   try {
     await sql`
