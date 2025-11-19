@@ -11,7 +11,7 @@ function isAdmin(request: NextRequest): boolean {
     return false
   }
 }
-
+// Actualizar una categoría
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -38,7 +38,7 @@ export async function PUT(
       WHERE id = ${id}
       RETURNING *
     `
-
+// Verificar si se actualizó alguna fila
     if (result.length === 0) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 })
     }
@@ -49,7 +49,7 @@ export async function PUT(
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
+// Eliminar una categoría
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -65,7 +65,7 @@ export async function DELETE(
     const category = await sql`
       SELECT is_default FROM categories WHERE id = ${id}
     `
-
+// Verificar si la categoría existe
     if (category.length > 0 && category[0].is_default) {
       return NextResponse.json({ error: "Cannot delete default category" }, { status: 400 })
     }
