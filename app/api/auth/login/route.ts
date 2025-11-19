@@ -1,3 +1,4 @@
+// app/api/auth/login/route.ts
 import { sql } from "@/lib/db"
 import { verifyPassword } from "@/lib/auth"
 import { type NextRequest, NextResponse } from "next/server"
@@ -25,8 +26,8 @@ export async function POST(request: NextRequest) {
 
     const token = crypto.randomBytes(32).toString("hex")
 
-    // Store token in a simple in-memory store (in production, use redis or session store)
-    // For now, we'll use JWT instead
+    // Token de la sesión en memoria (para producción, usar una solución más robusta)
+    // Por ejemplo: sessionStore[token] = { userId: user.id, email: user.email, role: user.role }
     const sessionToken = Buffer.from(JSON.stringify({ userId: user.id, email: user.email, role: user.role })).toString(
       "base64",
     )
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 },
     )
-
+// Establecer la cookie de autenticación
     response.cookies.set("auth_token", sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
