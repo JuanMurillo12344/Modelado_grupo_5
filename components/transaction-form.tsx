@@ -5,7 +5,6 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useNotifications } from "@/contexts/notification-context"
 
@@ -112,12 +111,7 @@ export function TransactionForm({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Nueva Transacción</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex gap-2">
             <Button
               type="button"
@@ -199,7 +193,5 @@ export function TransactionForm({ onSuccess }: { onSuccess: () => void }) {
             {isLoading ? "Guardando..." : "Agregar Transacción"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
   )
 }

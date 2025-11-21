@@ -86,7 +86,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
         showNotification(
           "budget_created",
           "Presupuesto creado",
-          `${categoryName}: $${Number.parseFloat(amount).toLocaleString()} (${period === "month" ? "mensual" : "semanal"})`
+          `${categoryName}: $${Number.parseFloat(amount).toLocaleString()}`
         )
         
         setSelectedCategory("")
@@ -135,7 +135,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
         showNotification(
           "budget_updated",
           "Presupuesto actualizado",
-          `${editingBudget.name}: $${Number(editingBudget.amount).toLocaleString()} (${editingBudget.period === "month" ? "mensual" : "semanal"})`
+          `${editingBudget.name}: $${Number(editingBudget.amount).toLocaleString()}`
         )
         
         setEditingBudget(null)
@@ -223,29 +223,15 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="block text-sm font-medium mb-1">Monto</label>
-              <Input
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Período</label>
-              <Select value={period} onValueChange={setPeriod}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="month">Mensual</SelectItem>
-                  <SelectItem value="week">Semanal</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Monto Mensual</label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </div>
 
           <Button onClick={handleAddBudget} className="w-full" disabled={isLoading}>
@@ -261,10 +247,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
                 <div key={budget.id} className="flex items-center justify-between p-3 rounded border group hover:bg-accent/50">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{budget.icon}</span>
-                    <div>
-                      <p className="text-sm font-medium">{budget.name}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{budget.period === "month" ? "Mensual" : "Semanal"}</p>
-                    </div>
+                    <p className="text-sm font-medium">{budget.name}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <p className="font-bold">${Number(budget.amount).toFixed(2)}</p>
@@ -309,7 +292,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Monto</label>
+                <label className="block text-sm font-medium mb-1">Monto Mensual</label>
                 <Input
                   type="number"
                   step="0.01"
@@ -319,22 +302,6 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
                     amount: Number.parseFloat(e.target.value) || 0
                   })}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Período</label>
-                <Select 
-                  value={editingBudget.period} 
-                  onValueChange={(value) => setEditingBudget({...editingBudget, period: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="month">Mensual</SelectItem>
-                    <SelectItem value="week">Semanal</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <div className="flex gap-2">

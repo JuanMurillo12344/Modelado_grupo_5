@@ -25,19 +25,22 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
     setIsLoading(true)
     try {
       const response = await fetch(`/api/dashboard/summary?month=${month}&year=${year}`)
+      
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+      
       const data = await response.json()
 
-      const incomeByCategory: IncomeCategory[] = data.byCategory
-        ? data.byCategory
-            .filter((c: any) => c.type === "income")
-            .map((c: any) => ({
-              name: c.name,
-              icon: c.icon,
-              total: Number(c.total),
-              percentage: data.totalIncome > 0 ? (Number(c.total) / data.totalIncome) * 100 : 0,
-              count: Number(c.count),
-            }))
-            .sort((a: IncomeCategory, b: IncomeCategory) => b.total - a.total)
+      const incomeByCategory: IncomeCategory[] = data.incomesByCategory
+        ? data.incomesByCategory.map((c: any) => ({
+            name: c.name,
+            icon: c.icon,
+            total: Number(c.total),
+            percentage: data.totalIncome > 0 ? (Number(c.total) / data.totalIncome) * 100 : 0,
+            count: Number(c.count),
+          }))
         : []
 
       setCategories(incomeByCategory)
@@ -53,7 +56,7 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Ingresos por Categoría</CardTitle>
+          <CardTitle>Ingresos</CardTitle>
           <CardDescription>Distribución de tus ingresos del mes</CardDescription>
         </CardHeader>
         <CardContent>
@@ -71,7 +74,7 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Ingresos por Categoría</CardTitle>
+          <CardTitle>Ingresos</CardTitle>
           <CardDescription>Distribución de tus ingresos del mes</CardDescription>
         </CardHeader>
         <CardContent>
@@ -97,9 +100,14 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ingresos por Categoría</CardTitle>
+        <CardTitle> Ingresos</CardTitle>
         <CardDescription>
-          Total del mes: <span className="font-bold text-green-600">${totalIncome.toFixed(2)}</span>
+          <div className="flex flex-col gap-1">
+            <p>Distribución de tus ingresos del mes</p>
+            <p>
+              Total recibido: <span className="font-bold text-green-600">${totalIncome.toFixed(2)}</span>
+            </p>
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -108,7 +116,7 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
             <div key={category.name} className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{category.icon}</span>
+                  <span className="text-2xl">{category.icon}</span>
                   <div>
                     <p className="font-medium">{category.name}</p>
                     <p className="text-xs text-muted-foreground">
@@ -117,15 +125,8 @@ export function IncomeChart({ month, year, refreshKey }: { month: number; year: 
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-green-600">${category.total.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">{category.percentage.toFixed(1)}%</p>
+                  <p className="font-bold">${category.total.toFixed(2)}</p>
                 </div>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
-                <div
-                  className={`h-full ${colors[idx % colors.length]} transition-all duration-300`}
-                  style={{ width: `${category.percentage}%` }}
-                />
               </div>
             </div>
           ))}

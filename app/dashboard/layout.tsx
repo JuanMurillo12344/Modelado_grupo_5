@@ -6,6 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { BudgetNotifications } from "@/components/budget-notifications"
 import { BudgetAlertsProvider } from "@/contexts/budget-alerts-context"
 import { NotificationProvider } from "@/contexts/notification-context"
+import { MonthProvider } from "@/contexts/month-context"
 
 export default function DashboardLayout({
   children,
@@ -16,13 +17,15 @@ export default function DashboardLayout({
     <ProtectedRoute>
       <NotificationProvider>
         <BudgetAlertsProvider>
-          <div className="flex h-screen overflow-hidden">
-            <DashboardSidebar />
-            <main className="flex-1 overflow-y-auto bg-background">
-              {children}
-            </main>
-            <BudgetNotifications />
-          </div>
+          <MonthProvider>
+            <div className="flex h-screen overflow-hidden">
+              <DashboardSidebar />
+              <main className="flex-1 overflow-y-auto bg-background">
+                {children}
+              </main>
+              <BudgetNotifications />
+            </div>
+          </MonthProvider>
         </BudgetAlertsProvider>
       </NotificationProvider>
     </ProtectedRoute>

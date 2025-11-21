@@ -15,7 +15,7 @@ export default function BudgetsPage() {
     refreshAlerts() // Actualizar el badge inmediatamente
     setRefreshKey(k => k + 1) // Actualizar las alertas visibles
   }
-  
+
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>

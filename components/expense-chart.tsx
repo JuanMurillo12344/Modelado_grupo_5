@@ -1,35 +1,29 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { usePolling } from "@/hooks/use-polling"
-import { RefreshCw } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
-interface CategoryData {
+interface ExpenseCategory {
   name: string
   icon: string
   color: string
   total: number
+  percentage: number
   count: number
 }
 
 export function ExpenseChart({ month, year, refreshKey }: { month: number; year: number; refreshKey?: number }) {
-  const [data, setData] = useState<CategoryData[]>([])
+  const [categories, setCategories] = useState<ExpenseCategory[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
+  const [totalExpenses, setTotalExpenses] = useState(0)
 
   useEffect(() => {
-    fetchData(true)
+    fetchData()
   }, [month, year, refreshKey])
 
-  // Auto-actualizar cada 30 segundos
-  usePolling(() => {
-    fetchData(false) // false = no mostrar loading
-  }, 30000)
-
-  const fetchData = async (showLoading = true) => {
-    if (showLoading) setIsLoading(true)
-    
+  const fetchData = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch(`/api/dashboard/summary?month=${month}&year=${year}`)
       
@@ -38,66 +32,97 @@ export function ExpenseChart({ month, year, refreshKey }: { month: number; year:
         return
       }
       
-      const json = await response.json()
-      console.log("Expense Chart Data:", json.byCategory)
-      setData(json.byCategory || [])
-      setLastUpdate(new Date())
+      const data = await response.json()
+
+      const expensesByCategory: ExpenseCategory[] = data.expensesByCategory
+        ? data.expensesByCategory.map((c: any) => ({
+            name: c.name,
+            icon: c.icon,
+            color: c.color,
+            total: Number(c.total),
+            percentage: data.totalExpenses > 0 ? (Number(c.total) / data.totalExpenses) * 100 : 0,
+            count: Number(c.count),
+          }))
+        : []
+
+      setCategories(expensesByCategory)
+      setTotalExpenses(Number(data.totalExpenses) || 0)
     } catch (err) {
-      console.error("[v0] Error fetching chart data:", err)
+      console.error("Error fetching expense data:", err)
     } finally {
-      if (showLoading) setIsLoading(false)
+      setIsLoading(false)
     }
   }
 
-  if (isLoading) return <div>Cargando gráfico...</div>
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Gastos por Categoría</CardTitle>
+          <CardDescription>Distribución de tus gastos del mes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
-  const totalExpenses = data.reduce((sum, item) => sum + Number(item.total || 0), 0)
-  console.log("Total Expenses:", totalExpenses, "Data:", data)
+  if (categories.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Gastos por Categoría</CardTitle>
+          <CardDescription>Distribución de tus gastos del mes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-48 text-center">
+            <div className="text-4xl mb-3">💸</div>
+            <p className="text-muted-foreground mb-1">No hay gastos registrados</p>
+            <p className="text-sm text-muted-foreground">Agrega transacciones de gasto para ver el análisis</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Distribución de Gastos</CardTitle>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <RefreshCw className="h-3 w-3 animate-spin-slow" />
-          <span>Actualizado: {lastUpdate.toLocaleTimeString()}</span>
-        </div>
+      <CardHeader>
+        <CardTitle>Gastos </CardTitle>
+        <CardDescription>
+          <div className="flex flex-col gap-1">
+            <p>Distribución de tus gastos del mes</p>
+            <p>
+              Total gastado: <span className="font-bold text-red-600">${totalExpenses.toFixed(2)}</span>
+            </p>
+          </div>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {data.length === 0 ? (
-            <p className="text-muted-foreground">Sin datos</p>
-          ) : (
-            data.map((item) => {
-              const itemTotal = Number(item.total || 0)
-              const percentage = totalExpenses > 0 ? (itemTotal / totalExpenses) * 100 : 0
-              console.log(`${item.name}: ${itemTotal} / ${totalExpenses} = ${percentage}%`)
-              
-              return (
-                <div key={item.name} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{item.icon}</span>
-                      <span className="font-medium">{item.name}</span>
-                    </div>
-                    <span className="font-bold">${itemTotal.toFixed(2)}</span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${Math.max(percentage, 0)}%`,
-                        backgroundColor: item.color || '#888',
-                      }}
-                    />
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {percentage.toFixed(1)}% • {item.count} {item.count === 1 ? 'transacción' : 'transacciones'}
+          {categories.map((category) => (
+            <div key={category.name} className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{category.icon}</span>
+                  <div>
+                    <p className="font-medium">{category.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {category.count} {category.count === 1 ? "transacción" : "transacciones"}
+                    </p>
                   </div>
                 </div>
-              )
-            })
-          )}
+                <div className="text-right">
+                  <p className="font-bold">${category.total.toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

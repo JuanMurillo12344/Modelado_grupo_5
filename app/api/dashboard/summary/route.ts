@@ -43,15 +43,29 @@ export async function GET(request: NextRequest) {
       AND EXTRACT(YEAR FROM date) = ${year}
     `
 
-    // Todas las categorías (ingresos y gastos)
-    const byCategoryRaw = await sql`
-      SELECT c.name, c.icon, c.color, t.type, SUM(t.amount) as total, COUNT(t.id) as count
+    // Gastos por categoría
+    const expensesByCategoryRaw = await sql`
+      SELECT c.name, c.icon, c.color, SUM(t.amount) as total, COUNT(t.id) as count
       FROM transactions t
       LEFT JOIN categories c ON t.category_id = c.id
       WHERE t.user_id = ${userId}
+      AND t.type = 'expense'
       AND EXTRACT(MONTH FROM t.date) = ${month} 
       AND EXTRACT(YEAR FROM t.date) = ${year}
-      GROUP BY c.id, c.name, c.icon, c.color, t.type
+      GROUP BY c.id, c.name, c.icon, c.color
+      ORDER BY total DESC
+    `
+
+    // Ingresos por categoría
+    const incomesByCategoryRaw = await sql`
+      SELECT c.name, c.icon, c.color, SUM(t.amount) as total, COUNT(t.id) as count
+      FROM transactions t
+      LEFT JOIN categories c ON t.category_id = c.id
+      WHERE t.user_id = ${userId}
+      AND t.type = 'income'
+      AND EXTRACT(MONTH FROM t.date) = ${month} 
+      AND EXTRACT(YEAR FROM t.date) = ${year}
+      GROUP BY c.id, c.name, c.icon, c.color
       ORDER BY total DESC
     `
 
@@ -64,10 +78,33 @@ export async function GET(request: NextRequest) {
       AND EXTRACT(YEAR FROM date) = ${year}
     `
 
+    // Total de presupuestos configurados
+    const budgetResult = await sql`
+      SELECT COALESCE(SUM(amount), 0) as total
+      FROM budgets
+      WHERE user_id = ${userId}
+    `
+
+    // Total gastado en categorías con presupuesto
+    const budgetSpentResult = await sql`
+      SELECT COALESCE(SUM(t.amount), 0) as spent
+      FROM transactions t
+      INNER JOIN budgets b ON t.category_id = b.category_id
+      WHERE t.user_id = ${userId}
+      AND t.type = 'expense'
+      AND EXTRACT(MONTH FROM t.date) = ${month} 
+      AND EXTRACT(YEAR FROM t.date) = ${year}
+    `
+
     // Convertir los totales a números para evitar problemas
-    const byCategory = byCategoryRaw.map(cat => ({
+    const expensesByCategory = expensesByCategoryRaw.map(cat => ({
       ...cat,
-      type: cat.type,
+      total: Number.parseFloat(cat.total || 0),
+      count: Number.parseInt(cat.count || 0)
+    }))
+
+    const incomesByCategory = incomesByCategoryRaw.map(cat => ({
+      ...cat,
       total: Number.parseFloat(cat.total || 0),
       count: Number.parseInt(cat.count || 0)
     }))
@@ -77,14 +114,19 @@ export async function GET(request: NextRequest) {
     const balance = totalIncome - totalExpenses
     const transactionCount = Number.parseInt(transactionCountResult[0].count || 0)
     const avgTransaction = transactionCount > 0 ? (totalIncome + totalExpenses) / transactionCount : 0
+    const budgetTotal = Number.parseFloat(budgetResult[0].total || 0)
+    const budgetUsed = Number.parseFloat(budgetSpentResult[0].spent || 0)
 
     return NextResponse.json({
       totalIncome,
       totalExpenses,
       balance,
-      byCategory,
+      expensesByCategory,
+      incomesByCategory,
       transactionCount,
       avgTransaction,
+      budgetTotal,
+      budgetUsed,
     })
   } catch (error) {
     console.error("[v0] Dashboard summary error:", error)
