@@ -39,25 +39,6 @@ export async function PUT(
       return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
     }
 
-    const oldTransaction = existing[0]
-    const oldAmount = parseFloat(oldTransaction.amount)
-    const oldType = oldTransaction.type
-
-    // Revertir el efecto de la transacción antigua en el balance
-    const oldBalanceChange = oldType === "income" ? -oldAmount : oldAmount
-    
-    // Aplicar el efecto de la nueva transacción
-    const newBalanceChange = type === "income" ? amount : -amount
-    
-    // Cambio neto en el balance
-    const totalBalanceChange = oldBalanceChange + newBalanceChange
-
-    await sql`
-      UPDATE users 
-      SET available_balance = available_balance + ${totalBalanceChange}
-      WHERE id = ${userId}
-    `
-
     const result = await sql`
       UPDATE transactions 
       SET 
@@ -111,14 +92,6 @@ export async function DELETE(
     }
 
     const transaction = existing[0]
-
-    // Revertir el efecto de la transacción en el balance
-    const balanceChange = transaction.type === "income" ? -parseFloat(transaction.amount) : parseFloat(transaction.amount)
-    await sql`
-      UPDATE users 
-      SET available_balance = available_balance + ${balanceChange}
-      WHERE id = ${userId}
-    `
 
     await sql`
       DELETE FROM transactions 

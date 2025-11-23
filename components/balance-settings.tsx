@@ -103,13 +103,17 @@ export function BalanceSettings() {
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               id="amount"
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="0.00"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                  setAmount(value)
+                }
+              }}
               className="pl-9"
-              step="0.01"
-              min="0"
             />
           </div>
         </div>

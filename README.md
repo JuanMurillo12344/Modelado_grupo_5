@@ -101,8 +101,8 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 Para probar la aplicación, puedes crear nuevas cuentas o usar estas credenciales de ejemplo:
 
 ### Usuario Regular
-- Email: `user@gmail.com`
-- Password: `12345`
+- Email: `renato@gmail.com`
+- Password: `juanito`
 
 ### Admin
 - Email: `admin@finanzapp.com`

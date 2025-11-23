@@ -321,10 +321,15 @@ export function TransactionsList({ month, year, refreshKey, filters, allowEdit =
               <div>
                 <label className="block text-sm font-medium mb-1">Monto</label>
                 <Input
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={editingTransaction.amount}
-                  onChange={(e) => setEditingTransaction({...editingTransaction, amount: Number(e.target.value)})}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                      setEditingTransaction({...editingTransaction, amount: Number(value) || 0})
+                    }
+                  }}
                   required
                 />
               </div>

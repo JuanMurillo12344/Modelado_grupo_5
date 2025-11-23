@@ -187,10 +187,15 @@ export default function ReportsPage() {
             {isEditingBalance ? (
               <div className="space-y-2">
                 <Input
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={newBalanceInput}
-                  onChange={(e) => setNewBalanceInput(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                      setNewBalanceInput(value)
+                    }
+                  }}
                   placeholder="Balance inicial"
                   className="h-10"
                 />

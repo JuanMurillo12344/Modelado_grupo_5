@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { useNotifications } from "@/contexts/notification-context"
-import { Pencil, Trash2 } from "lucide-react"
+import { Pencil, Trash2, AlertCircle } from "lucide-react"
 
 interface Category {
   id: number
@@ -24,6 +24,10 @@ interface Budget {
   icon: string
   amount: number
   period: string
+  category_id: number
+  spent?: number
+  remaining?: number
+  percentage?: number
 }
 
 export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
@@ -54,9 +58,19 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
     }
   }
 
+  // Filtrar categorías que aún no tienen presupuesto
+  const availableCategories = categories.filter(
+    cat => !budgets.some(budget => budget.category_id === cat.id)
+  )
+
   const fetchBudgets = async () => {
     try {
-      const response = await fetch("/api/budgets")
+      // Obtener mes y año actual
+      const now = new Date()
+      const month = now.getMonth() + 1
+      const year = now.getFullYear()
+      
+      const response = await fetch(`/api/budgets?month=${month}&year=${year}`)
       const data = await response.json()
       setBudgets(data.budgets)
     } catch (err) {
@@ -85,7 +99,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
         // Mostrar notificación inmediatamente
         showNotification(
           "budget_created",
-          "Presupuesto creado",
+          "Presupuesto actualizado",
           `${categoryName}: $${Number.parseFloat(amount).toLocaleString()}`
         )
         
@@ -94,9 +108,10 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
         fetchBudgets()
         onSuccess?.()
       } else {
+        const errorData = await response.json()
         toast({
           title: "❌ Error",
-          description: "No se pudo crear el presupuesto",
+          description: errorData.error || "No se pudo crear el presupuesto",
           variant: "destructive",
         })
       }
@@ -202,7 +217,7 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gestionar Presupuestos</CardTitle>
+        <CardTitle>Definir Presupuesto</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
@@ -213,12 +228,18 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
                 <SelectValue placeholder="Selecciona una categoría" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={String(cat.id)}>
-                    <span className="mr-2">{cat.icon}</span>
-                    {cat.name}
-                  </SelectItem>
-                ))}
+                {availableCategories.length > 0 ? (
+                  availableCategories.map((cat) => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>
+                      <span className="mr-2">{cat.icon}</span>
+                      {cat.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-sm text-muted-foreground text-center">
+                    Todas las categorías ya tienen presupuesto
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -226,16 +247,25 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
           <div>
             <label className="block text-sm font-medium mb-1">Monto Mensual</label>
             <Input
-              type="number"
-              step="0.01"
+              type="text"
+              inputMode="decimal"
               placeholder="0.00"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                  setAmount(value)
+                }
+              }}
             />
           </div>
 
-          <Button onClick={handleAddBudget} className="w-full" disabled={isLoading}>
-            {isLoading ? "Guardando..." : "Crear Presupuesto"}
+          <Button 
+            onClick={handleAddBudget} 
+            className="w-full" 
+            disabled={isLoading || availableCategories.length === 0}
+          >
+            {isLoading ? "Guardando..." : availableCategories.length === 0 ? "No hay categorías disponibles" : "Crear Presupuesto"}
           </Button>
         </div>
 
@@ -243,33 +273,119 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
           <div className="pt-4 border-t">
             <h3 className="font-medium mb-3">Presupuestos Existentes</h3>
             <div className="space-y-2">
-              {budgets.map((budget) => (
-                <div key={budget.id} className="flex items-center justify-between p-3 rounded border group hover:bg-accent/50">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">{budget.icon}</span>
-                    <p className="text-sm font-medium">{budget.name}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold">${Number(budget.amount).toFixed(2)}</p>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleEdit(budget)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => setDeleteBudget(budget)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
+              {budgets.map((budget) => {
+                const spent = budget.spent || 0
+                const remaining = budget.remaining || budget.amount
+                const amount = budget.amount || 0
+                const percentage = budget.percentage || 0
+                const isOver = percentage > 100
+                const isWarning = percentage >= 80 && percentage <= 100
+                const isHealthy = percentage < 80
+                
+                return (
+                  <div key={budget.id} className="space-y-3 p-4 rounded-lg border-2 group hover:border-primary/50 transition-all hover:shadow-md">
+                    {/* Header con categoría y porcentaje */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl">{budget.icon}</div>
+                        <div>
+                          <p className="font-semibold text-base">{budget.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Presupuesto: ${amount.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className={`px-3 py-1 rounded-full text-sm font-bold ${
+                          isOver ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400" : 
+                          isWarning ? "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400" : 
+                          "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400"
+                        }`}>
+                          {percentage.toFixed(0)}%
+                        </div>
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => handleEdit(budget)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => setDeleteBudget(budget)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
+
+                    {/* Barra de progreso mejorada */}
+                    <div className="space-y-1">
+                      <div className="h-3 bg-muted rounded-full overflow-hidden shadow-inner">
+                        <div 
+                          className={`h-full transition-all duration-500 ${
+                            isOver ? "bg-gradient-to-r from-red-500 to-red-600" : 
+                            isWarning ? "bg-gradient-to-r from-orange-400 to-orange-500" : 
+                            "bg-gradient-to-r from-green-400 to-green-500"
+                          }`}
+                          style={{ width: `${Math.min(percentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Información de gastos mejorada */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-muted/50 rounded-lg p-2">
+                        <p className="text-xs text-muted-foreground mb-0.5">💸 Gastado</p>
+                        <p className="text-sm font-bold">${spent.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</p>
+                      </div>
+                      <div className={`rounded-lg p-2 ${
+                        isOver ? "bg-red-50 dark:bg-red-950/30" : "bg-green-50 dark:bg-green-950/30"
+                      }`}>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          {isOver ? "⚠️ Excediste" : "✅ Disponible"}
+                        </p>
+                        <p className={`text-sm font-bold ${
+                          isOver ? "text-red-700 dark:text-red-400" : "text-green-700 dark:text-green-400"
+                        }`}>
+                          ${Math.abs(remaining).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Alertas según estado */}
+                    {isOver && (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900">
+                        <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                        <p className="text-xs text-red-700 dark:text-red-400 font-medium">
+                          ¡Has superado tu presupuesto! Controla tus gastos para no pasarte más.
+                        </p>
+                      </div>
+                    )}
+                    {!isOver && percentage >= 100 && (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900">
+                        <AlertCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                        <p className="text-xs text-orange-700 dark:text-orange-400 font-medium">
+                          ¡Presupuesto completado! Ya gastaste todo lo planeado para este mes.
+                        </p>
+                      </div>
+                    )}
+                    {isWarning && percentage < 100 && (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-900">
+                        <AlertCircle className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                        <p className="text-xs text-yellow-700 dark:text-yellow-400 font-medium">
+                          ¡Cuidado! Te queda poco presupuesto. Modera tus gastos.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
@@ -294,13 +410,18 @@ export function BudgetManager({ onSuccess }: { onSuccess?: () => void }) {
               <div>
                 <label className="block text-sm font-medium mb-1">Monto Mensual</label>
                 <Input
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={editingBudget.amount}
-                  onChange={(e) => setEditingBudget({
-                    ...editingBudget,
-                    amount: Number.parseFloat(e.target.value) || 0
-                  })}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                      setEditingBudget({
+                        ...editingBudget,
+                        amount: value === '' ? 0 : Number.parseFloat(value)
+                      })
+                    }
+                  }}
                 />
               </div>
 

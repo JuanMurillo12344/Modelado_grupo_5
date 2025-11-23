@@ -26,8 +26,7 @@ export async function POST(request: NextRequest) {
 
     const user = result[0]
 
-    // Las categorías globales (user_id = NULL) ya están disponibles para todos los usuarios
-    // No es necesario crear categorías personalizadas en el registro
+    
 
     return NextResponse.json({ user: { id: user.id, email: user.email, fullName: user.full_name } }, { status: 201 })
   } catch (error) {
