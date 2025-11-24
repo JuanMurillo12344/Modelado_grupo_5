@@ -16,7 +16,6 @@ interface AdminStats {
     total: number
   }>
 }
-// 
 
 export function AdminStats() {
   const [stats, setStats] = useState<AdminStats | null>(null)

@@ -1,5 +1,5 @@
- import * as React from 'react'
-// define el movil como menos de 768px de ancho
+import * as React from 'react'
+
 const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {

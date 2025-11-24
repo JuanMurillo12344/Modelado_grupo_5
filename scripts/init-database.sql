@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
   full_name VARCHAR(255),
   role VARCHAR(50) DEFAULT 'user' CHECK (role IN ('user', 'admin')),
   monthly_budget DECIMAL(12, 2) DEFAULT 0,
+  available_balance DECIMAL(12, 2) DEFAULT 0, -- Balance disponible actual
   preferred_currency VARCHAR(10) DEFAULT 'USD',
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -30,6 +31,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Categories table
+-- user_id NULL = categoría global (predefinida)
+-- user_id NOT NULL = categoría personalizada del usuario
 CREATE TABLE IF NOT EXISTS categories (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,

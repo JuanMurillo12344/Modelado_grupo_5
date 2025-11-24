@@ -1,14 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Pencil, Trash2 } from "lucide-react"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { useToast } from "@/hooks/use-toast"
 import { useNotifications } from "@/contexts/notification-context"
+import { formatEcuadorDate } from "@/lib/date-utils"
 
 interface Transaction {
   id: number
@@ -232,7 +235,9 @@ export function TransactionsList({ month, year, refreshKey, filters, allowEdit =
                     <p className={`font-bold ${tx.type === "income" ? "text-green-600" : "text-red-600"}`}>
                       {tx.type === "income" ? "+" : "-"}${Number(tx.amount).toFixed(2)}
                     </p>
-                    <p className="text-xs text-muted-foreground">{new Date(tx.date).toLocaleDateString()}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatEcuadorDate(tx.date)}
+                    </p>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     {allowEdit && (

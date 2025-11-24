@@ -26,24 +26,8 @@ export async function POST(request: NextRequest) {
 
     const user = result[0]
 
-    // Create default categories for new user
-    const defaultCategories = [
-      { name: "Salario", icon: "💰", color: "#10b981", type: "income" },
-      { name: "Freelance", icon: "💻", color: "#3b82f6", type: "income" },
-      { name: "Comida", icon: "🍔", color: "#f59e0b", type: "expense" },
-      { name: "Transporte", icon: "🚗", color: "#8b5cf6", type: "expense" },
-      { name: "Entretenimiento", icon: "🎮", color: "#ec4899", type: "expense" },
-      { name: "Educación", icon: "📚", color: "#06b6d4", type: "expense" },
-      { name: "Salud", icon: "⚕️", color: "#ef4444", type: "expense" },
-      { name: "Otros", icon: "📦", color: "#6b7280", type: "expense" },
-    ]
-
-    for (const cat of defaultCategories) {
-      await sql`
-        INSERT INTO categories (user_id, name, icon, color, type) 
-        VALUES (${user.id}, ${cat.name}, ${cat.icon}, ${cat.color}, ${cat.type})
-      `
-    }
+    // Las categorías globales (user_id = NULL) ya están disponibles para todos los usuarios
+    // No es necesario crear categorías personalizadas en el registro
 
     return NextResponse.json({ user: { id: user.id, email: user.email, fullName: user.full_name } }, { status: 201 })
   } catch (error) {

@@ -232,7 +232,7 @@ Las contribuciones son bienvenidas. Por favor:
 
 Este proyecto está bajo la licencia MIT.
 
-## � Documentación Adicional
+##   Documentación Adicional
 
 - **SETUP.md** - Guía completa de instalación paso a paso
 - **FEATURES.md** - Lista detallada de todas las funcionalidades

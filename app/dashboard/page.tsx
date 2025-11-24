@@ -1,55 +1,63 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { TransactionForm } from "@/components/transaction-form"
 import { TransactionsList } from "@/components/transactions-list"
-import { BudgetAlerts } from "@/components/budget-alerts"
-import { QuickStatsCards } from "@/components/quick-stats-cards"
+import { SimpleBalanceCard } from "@/components/simple-balance-card"
+import { SimpleBudgetList } from "@/components/simple-budget-list"
 import { PeriodComparison } from "@/components/period-comparison"
-import { BalanceOverview } from "@/components/balance-overview"
 import { ExpenseChart } from "@/components/expense-chart"
 import { IncomeChart } from "@/components/income-chart"
 import { useBudgetAlerts } from "@/contexts/budget-alerts-context"
+import { useMonth } from "@/contexts/month-context"
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardPage() {
   const { refreshAlerts } = useBudgetAlerts()
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const [year, setYear] = useState(new Date().getFullYear())
+  const { month, year, goToPreviousMonth, goToNextMonth, getMonthName } = useMonth()
   const [refreshKey, setRefreshKey] = useState(0)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  
+  // Estado para balance y estadísticas
+  const [balanceData, setBalanceData] = useState({
+    availableBalance: 0,
+    totalIncome: 0,
+    totalExpenses: 0
+  })
 
-  const handlePreviousMonth = () => {
-    if (month === 1) {
-      setMonth(12)
-      setYear(year - 1)
-    } else {
-      setMonth(month - 1)
+  // Cargar balance del usuario y estadísticas del mes
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener balance mensual disponible
+        const balanceRes = await fetch(`/api/monthly-balance?month=${month}&year=${year}`)
+        const balanceJson = await balanceRes.json()
+        
+        // Obtener resumen del mes
+        const summaryRes = await fetch(`/api/dashboard/summary?month=${month}&year=${year}`)
+        const summaryJson = await summaryRes.json()
+        
+        setBalanceData({
+          availableBalance: balanceJson.availableBalance || 0,
+          totalIncome: summaryJson.totalIncome || 0,
+          totalExpenses: summaryJson.totalExpenses || 0
+        })
+      } catch (error) {
+        console.error("Error al cargar datos:", error)
+      }
     }
-  }
-
-  const handleNextMonth = () => {
-    if (month === 12) {
-      setMonth(1)
-      setYear(year + 1)
-    } else {
-      setMonth(month + 1)
-    }
-  }
+    
+    fetchData()
+  }, [month, year, refreshKey])
 
   const handleTransactionSuccess = () => {
     setRefreshKey((k) => k + 1)
     refreshAlerts() // Actualizar alertas en tiempo real
     setIsDialogOpen(false)
   }
-
-  const monthName = new Date(year, month - 1).toLocaleDateString("es-ES", {
-    month: "long",
-    year: "numeric",
-  })
 
   return (
     <div className="h-full">
@@ -63,13 +71,13 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2">
             {/* Navegación de mes */}
             <div className="flex items-center gap-2 bg-muted rounded-lg p-1">
-              <Button variant="ghost" size="sm" onClick={handlePreviousMonth}>
+              <Button variant="ghost" size="sm" onClick={goToPreviousMonth}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <span className="text-sm font-medium px-2 min-w-[150px] text-center capitalize">
-                {monthName}
+                {getMonthName()}
               </span>
-              <Button variant="ghost" size="sm" onClick={handleNextMonth}>
+              <Button variant="ghost" size="sm" onClick={goToNextMonth}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
@@ -95,15 +103,17 @@ export default function DashboardPage() {
 
       {/* Contenido principal */}
       <div className="p-4 md:p-6 space-y-6">
-        {/* Alertas de presupuesto */}
-        <BudgetAlerts month={month} year={year} refreshKey={refreshKey} />
+        {/* Tarjetas simplificadas de balance */}
+        <SimpleBalanceCard 
+          availableBalance={balanceData.availableBalance}
+          totalIncome={balanceData.totalIncome}
+          totalExpenses={balanceData.totalExpenses}
+        />
 
-        {/* Tarjetas de estadísticas rápidas */}
-        <QuickStatsCards month={month} year={year} refreshKey={refreshKey} />
-
-        {/* Grid principal: Balance visual y Comparación */}
+        {/* Grid principal: Presupuestos y Comparación */}
+        {/* SimpleBudgetList se oculta automáticamente si no hay presupuestos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <BalanceOverview month={month} year={year} refreshKey={refreshKey} />
+          <SimpleBudgetList month={month} year={year} refreshKey={refreshKey} />
           <PeriodComparison month={month} year={year} refreshKey={refreshKey} />
         </div>
 

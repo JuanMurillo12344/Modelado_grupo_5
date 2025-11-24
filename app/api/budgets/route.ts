@@ -20,6 +20,54 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const { searchParams } = new URL(request.url)
+    const month = searchParams.get("month")
+    const year = searchParams.get("year")
+
+    // Si se especifica mes y año, calcular gastos
+    if (month && year) {
+      const budgetsWithSpending = await sql`
+        SELECT 
+          b.id,
+          b.category_id,
+          b.amount,
+          b.period,
+          c.name as category_name,
+          c.icon as category_icon,
+          c.color as category_color,
+          COALESCE(SUM(t.amount), 0) as spent
+        FROM budgets b
+        LEFT JOIN categories c ON b.category_id = c.id
+        LEFT JOIN transactions t ON t.category_id = b.category_id 
+          AND t.user_id = ${userId}
+          AND t.type = 'expense'
+          AND EXTRACT(MONTH FROM t.date) = ${month}
+          AND EXTRACT(YEAR FROM t.date) = ${year}
+        WHERE b.user_id = ${userId}
+        GROUP BY b.id, b.category_id, b.amount, b.period, c.name, c.icon, c.color
+        ORDER BY c.name
+      `
+
+      // Calcular porcentajes y restante
+      const budgets = budgetsWithSpending.map(budget => {
+        const spent = parseFloat(budget.spent || 0)
+        const amount = parseFloat(budget.amount)
+        const percentage = amount > 0 ? (spent / amount) * 100 : 0
+        const remaining = amount - spent
+
+        return {
+          ...budget,
+          spent,
+          amount,
+          percentage,
+          remaining
+        }
+      })
+
+      return NextResponse.json({ budgets })
+    }
+
+    // Sin filtros, devolver solo la lista de presupuestos
     const budgets = await sql`
       SELECT b.*, c.name, c.icon FROM budgets b 
       LEFT JOIN categories c ON b.category_id = c.id

@@ -16,7 +16,6 @@ interface Transaction {
   category_icon: string
 }
 
-
 export function IncomeList({ month, year, refreshKey }: { month: number; year: number; refreshKey?: number }) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [isLoading, setIsLoading] = useState(true)
