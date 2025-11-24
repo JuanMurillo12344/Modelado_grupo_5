@@ -18,9 +18,6 @@ export default function SettingsPage() {
   const { user, refreshUser } = useAuth()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
-  const [isSavingBudget, setIsSavingBudget] = useState(false)
-  const [monthlyBudget, setMonthlyBudget] = useState<string>("")
-  const [currency, setCurrency] = useState<string>("USD")
   const [firstName, setFirstName] = useState(user?.fullName?.split(" ")[0] || "")
   const [lastName, setLastName] = useState(user?.fullName?.split(" ").slice(1).join(" ") || "")
   const [email, setEmail] = useState(user?.email || "")
@@ -119,31 +116,6 @@ export default function SettingsPage() {
       })
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleSaveBudget = async () => {
-    setIsSavingBudget(true)
-    try {
-      const response = await fetch("/api/settings/budget", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          monthlyBudget: Number(monthlyBudget),
-          preferredCurrency: currency,
-        }),
-      })
-
-      if (response.ok) {
-        alert("Presupuesto actualizado correctamente")
-      } else {
-        alert("Error al actualizar el presupuesto")
-      }
-    } catch (err) {
-      console.error("[v0] Error saving budget:", err)
-      alert("Error al actualizar el presupuesto")
-    } finally {
-      setIsSavingBudget(false)
     }
   }
 

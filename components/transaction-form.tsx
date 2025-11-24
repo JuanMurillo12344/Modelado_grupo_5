@@ -168,11 +168,16 @@ export function TransactionForm({ onSuccess }: { onSuccess: () => void }) {
           <div>
             <label className="block text-sm font-medium mb-1">Monto</label>
             <Input
-              type="number"
-              step="0.01"
+              type="text"
+              inputMode="decimal"
               placeholder="0.00"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                  setAmount(value)
+                }
+              }}
               required
             />
           </div>

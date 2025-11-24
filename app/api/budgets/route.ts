@@ -57,6 +57,8 @@ export async function GET(request: NextRequest) {
 
         return {
           ...budget,
+          name: budget.category_name,
+          icon: budget.category_icon,
           spent,
           amount,
           percentage,
@@ -81,7 +83,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
+//Cr
 export async function POST(request: NextRequest) {
   try {
     const userId = getUserIdFromCookie(request)
@@ -98,6 +100,8 @@ export async function POST(request: NextRequest) {
     const result = await sql`
       INSERT INTO budgets (user_id, category_id, amount, period) 
       VALUES (${userId}, ${categoryId}, ${amount}, ${period || "month"}) 
+      ON CONFLICT (user_id, category_id, period) 
+      DO UPDATE SET amount = ${amount}
       RETURNING *
     `
 
