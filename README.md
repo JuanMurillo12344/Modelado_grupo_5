@@ -342,16 +342,6 @@ Los indicadores de comparación de períodos tienen lógica contextual:
 
 Desarrollado por Grupo 5
 
-=======
->>>>>>> 4d55431347a3a53cd12ae3d55543afa27696157f
-## 📞 Soporte
-
-Si tienes preguntas o problemas:
-1. **SETUP.md** - Guía completa de instalación con troubleshooting
-2. **Next.js Docs** - https://nextjs.org/docs
-3. **Neon Docs** - https://neon.tech/docs
-4. **Tailwind CSS** - https://tailwindcss.com/docs
-5. **shadcn/ui** - https://ui.shadcn.com
 
 ## 🤝 Contribuciones
 
