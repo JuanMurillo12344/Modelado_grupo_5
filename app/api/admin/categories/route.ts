@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       INSERT INTO categories (name, icon, color, type) 
       VALUES (${name}, ${icon}, ${color}, ${type}) 
       RETURNING *
-    `
+    ` as any[]
 
     return NextResponse.json(result[0], { status: 201 })
   } catch (error) {

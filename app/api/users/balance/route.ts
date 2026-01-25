@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       SELECT initial_balance 
       FROM monthly_balances 
       WHERE user_id = ${userId} AND year = ${year} AND month = ${month}
-    `
+    ` as any[]
 
     const transactions = await sql`
       SELECT 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       WHERE user_id = ${userId}
         AND EXTRACT(YEAR FROM date) = ${year}
         AND EXTRACT(MONTH FROM date) = ${month}
-    `
+    ` as any[]
 
     const initialBalance = balance.length > 0 ? parseFloat(balance[0].initial_balance) : 0
     const income = parseFloat(transactions[0]?.income || '0')

@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       AND type = 'income'
       AND EXTRACT(MONTH FROM date) = ${month} 
       AND EXTRACT(YEAR FROM date) = ${year}
-    `
+    ` as any[]
 
     // Total expenses
     const expenseResult = await sql`
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       AND type = 'expense'
       AND EXTRACT(MONTH FROM date) = ${month} 
       AND EXTRACT(YEAR FROM date) = ${year}
-    `
+    ` as any[]
 
     // Gastos por categoría
     const expensesByCategoryRaw = await sql`
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       AND EXTRACT(YEAR FROM t.date) = ${year}
       GROUP BY c.id, c.name, c.icon, c.color
       ORDER BY total DESC
-    `
+    ` as any[]
 
     // Ingresos por categoría
     const incomesByCategoryRaw = await sql`
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       AND EXTRACT(YEAR FROM t.date) = ${year}
       GROUP BY c.id, c.name, c.icon, c.color
       ORDER BY total DESC
-    `
+    ` as any[]
 
     // Total de transacciones del mes
     const transactionCountResult = await sql`
@@ -76,14 +76,14 @@ export async function GET(request: NextRequest) {
       WHERE user_id = ${userId}
       AND EXTRACT(MONTH FROM date) = ${month} 
       AND EXTRACT(YEAR FROM date) = ${year}
-    `
+    ` as any[]
 
     // Total de presupuestos configurados
     const budgetResult = await sql`
       SELECT COALESCE(SUM(amount), 0) as total
       FROM budgets
       WHERE user_id = ${userId}
-    `
+    ` as any[]
 
     // Total gastado en categorías con presupuesto
     const budgetSpentResult = await sql`
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       AND t.type = 'expense'
       AND EXTRACT(MONTH FROM t.date) = ${month} 
       AND EXTRACT(YEAR FROM t.date) = ${year}
-    `
+    ` as any[]
 
     // Convertir los totales a números para evitar problemas
     const expensesByCategory = expensesByCategoryRaw.map(cat => ({

@@ -21,8 +21,8 @@ function getSQL() {
 export const sql = new Proxy(
   {},
   {
-    apply(_target, _thisArg, argumentsList) {
-      return getSQL()(...argumentsList)
+    apply(_target, _thisArg, argumentsList: any[]) {
+      return (getSQL() as any)(...argumentsList)
     },
     get(_target, prop) {
       return (getSQL() as any)[prop]

@@ -33,7 +33,7 @@ export async function PUT(
     // Verificar que la transacción pertenece al usuario y obtener valores antiguos
     const existing = await sql`
       SELECT id, amount, type FROM transactions WHERE id = ${id} AND user_id = ${userId}
-    `
+    ` as any[]
 
     if (existing.length === 0) {
       return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
@@ -50,7 +50,7 @@ export async function PUT(
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ${id} AND user_id = ${userId}
       RETURNING *
-    `
+    ` as any[]
 
     const transaction = result[0]
 
@@ -85,7 +85,7 @@ export async function DELETE(
     // Verificar que la transacción pertenece al usuario
     const existing = await sql`
       SELECT title, amount, type FROM transactions WHERE id = ${id} AND user_id = ${userId}
-    `
+    ` as any[]
 
     if (existing.length === 0) {
       return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
