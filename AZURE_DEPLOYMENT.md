@@ -84,6 +84,8 @@ Configure these in Azure App Service → Configuration → Application Settings:
 | `DATABASE_URL` | Yes | PostgreSQL connection string | `postgresql://user:pass@host:5432/db` |
 | `NODE_ENV` | Yes | Node environment | `production` |
 | `PORT` | No | Server port (auto-set by Azure) | `8080` |
+| `TZ` or `TIMEZONE` | No | Database timezone | `America/Guayaquil`, `UTC` |
+| `HOST` | No | Server hostname | `localhost` |
 | `WEBSITE_NODE_DEFAULT_VERSION` | No | Node.js version | `22.x` |
 
 ## Database Setup
@@ -131,7 +133,7 @@ The GitHub Actions workflow automatically:
 
 **Solution**: The build process requires a DATABASE_URL. Use a dummy value:
 ```bash
-DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build
+DATABASE_URL="postgresql://YOUR_USER:YOUR_PASSWORD@YOUR_HOST:5432/YOUR_DATABASE" npm run build
 ```
 
 ### Application Doesn't Start on Azure

@@ -10,9 +10,10 @@ function getSQL() {
   }
 
   // Agregar parámetro de zona horaria directamente en la URL de conexión
+  const timezone = process.env.TZ || process.env.TIMEZONE || 'America/Guayaquil'
   const connectionString = process.env.DATABASE_URL.includes('?')
-    ? `${process.env.DATABASE_URL}&options=-c%20timezone%3DAmerica/Guayaquil`
-    : `${process.env.DATABASE_URL}?options=-c%20timezone%3DAmerica/Guayaquil`
+    ? `${process.env.DATABASE_URL}&options=-c%20timezone%3D${encodeURIComponent(timezone)}`
+    : `${process.env.DATABASE_URL}?options=-c%20timezone%3D${encodeURIComponent(timezone)}`
 
   _sql = neon(connectionString)
   return _sql
