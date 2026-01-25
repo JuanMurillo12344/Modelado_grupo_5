@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { AuthProvider } from "@/contexts/auth-context"
@@ -8,9 +7,6 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { Toaster } from "@/components/ui/toaster"
 // @ts-ignore: allow global CSS import without type declarations
 import "./globals.css"
-
-const _geistSans = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "FinanzApp - Gestor de Finanzas Personales",
@@ -67,7 +63,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${_geistSans.className} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ErrorBoundary>
           <AuthProvider>
             <ThemeProvider>

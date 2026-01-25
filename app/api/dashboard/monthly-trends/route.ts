@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       FROM transactions
       WHERE user_id = ${userId}
       ORDER BY year DESC, month DESC
-    `
+    ` as any[]
 
     const trends = []
     const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         WHERE user_id = ${userId}
           AND EXTRACT(YEAR FROM date) = ${year}
           AND EXTRACT(MONTH FROM date) = ${month}
-      `
+      ` as any[]
 
       trends.push({
         month,

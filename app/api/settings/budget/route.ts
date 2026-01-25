@@ -33,7 +33,7 @@ export async function PUT(request: NextRequest) {
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ${userId}
       RETURNING id, monthly_budget, preferred_currency
-    `
+    ` as any[]
 
     return NextResponse.json(result[0], { status: 200 })
   } catch (error) {

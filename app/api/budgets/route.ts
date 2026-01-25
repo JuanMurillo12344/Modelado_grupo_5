@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         WHERE b.user_id = ${userId}
         GROUP BY b.id, b.category_id, b.amount, b.period, c.name, c.icon, c.color
         ORDER BY c.name
-      `
+      ` as any[]
 
       // Calcular porcentajes y restante
       const budgets = budgetsWithSpending.map(budget => {
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN categories c ON b.category_id = c.id
       WHERE b.user_id = ${userId}
       ORDER BY c.name
-    `
+    ` as any[]
 
     return NextResponse.json({ budgets })
   } catch (error) {
@@ -103,14 +103,14 @@ export async function POST(request: NextRequest) {
       ON CONFLICT (user_id, category_id, period) 
       DO UPDATE SET amount = ${amount}
       RETURNING *
-    `
+    ` as any[]
 
     const budget = result[0]
 
     // Obtener nombre de la categoría
     const category = await sql`
       SELECT name FROM categories WHERE id = ${categoryId}
-    `
+    ` as any[]
 
     // Crear notificación
     await createNotification({

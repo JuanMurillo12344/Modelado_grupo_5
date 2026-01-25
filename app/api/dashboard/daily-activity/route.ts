@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
         AND EXTRACT(MONTH FROM date) = ${month}
       GROUP BY EXTRACT(DAY FROM date)
       ORDER BY day
-    `
+    ` as any[]
 
     const daily = dailyActivity.map(row => ({
       day: Number(row.day),

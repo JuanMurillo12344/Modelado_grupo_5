@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
     }
 
-    const users = await sql`SELECT id, email, password_hash, full_name, role FROM users WHERE email = ${email}`
+    const users = await sql`SELECT id, email, password_hash, full_name, role FROM users WHERE email = ${email}` as any[]
 
     if (users.length === 0) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })

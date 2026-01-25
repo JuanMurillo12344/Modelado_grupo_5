@@ -39,11 +39,12 @@ export async function PUT(
       RETURNING *
     `
 // Verificar si se actualizó alguna fila
-    if (result.length === 0) {
+    const resultRows = result as any[]
+    if (resultRows.length === 0) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 })
     }
 
-    return NextResponse.json(result[0], { status: 200 })
+    return NextResponse.json(resultRows[0], { status: 200 })
   } catch (error) {
     console.error("[v0] Update category error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
@@ -66,7 +67,8 @@ export async function DELETE(
       SELECT is_default FROM categories WHERE id = ${id}
     `
 // Verificar si la categoría existe
-    if (category.length > 0 && category[0].is_default) {
+    const categoryRows = category as any[]
+    if (categoryRows.length > 0 && categoryRows[0].is_default) {
       return NextResponse.json({ error: "Cannot delete default category" }, { status: 400 })
     }
 
