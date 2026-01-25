@@ -337,20 +337,9 @@ Los indicadores de comparación de períodos tienen lógica contextual:
 - Alertas cuando se exceden límites
 - Reportes mensuales para tomar decisiones
 
-<<<<<<< HEAD
 ## 👨‍💻 Autor
 
 Desarrollado por Grupo 5
-
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-1. Fork el proyecto
-2. Crea una rama feature (\`git checkout -b feature/AmazingFeature\`)
-3. Commit tus cambios (\`git commit -m 'Add AmazingFeature'\`)
-4. Push a la rama (\`git push origin feature/AmazingFeature\`)
-5. Abre un Pull Request
 
 ---
 
