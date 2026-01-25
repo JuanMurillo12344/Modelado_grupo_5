@@ -43,7 +43,7 @@ export async function PATCH(request: NextRequest) {
     const existingUser = await sql`
       SELECT id FROM users 
       WHERE email = ${email} AND id != ${userId}
-    `
+    ` as any[]
 
     if (existingUser.length > 0) {
       return NextResponse.json(

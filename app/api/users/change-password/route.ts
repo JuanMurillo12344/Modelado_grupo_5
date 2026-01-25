@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       SELECT id, password_hash 
       FROM users 
       WHERE id = ${userId}
-    `
+    ` as any[]
 
     if (users.length === 0) {
       return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 })

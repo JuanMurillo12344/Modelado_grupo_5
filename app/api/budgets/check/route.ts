@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
         AND type = 'budget_exceeded'
         AND message LIKE ${`${alert.name}:%`}
         AND created_at >= date_trunc('month', CURRENT_DATE)
-      `
+      ` as any[]
 
       // Solo crear notificación si no existe una para este mes
       if (existingNotification.length === 0) {

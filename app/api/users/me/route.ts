@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       SELECT id, email, full_name, role, profile_picture 
       FROM users 
       WHERE id = ${userId}
-    `
+    ` as any[]
 
     if (result.length === 0) {
       return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 })

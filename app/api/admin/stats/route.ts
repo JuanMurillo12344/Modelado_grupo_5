@@ -19,19 +19,19 @@ export async function GET(request: NextRequest) {
 
   try {
     // Total users
-    const usersResult = await sql`SELECT COUNT(*) as count FROM users`
+    const usersResult = await sql`SELECT COUNT(*) as count FROM users` as any[]
     const totalUsers = Number.parseInt(usersResult[0].count)
 
     // Total transactions
-    const transactionsResult = await sql`SELECT COUNT(*) as count FROM transactions`
+    const transactionsResult = await sql`SELECT COUNT(*) as count FROM transactions` as any[]
     const totalTransactions = Number.parseInt(transactionsResult[0].count)
 
     // Total income
-    const incomeResult = await sql`SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'income'`
+    const incomeResult = await sql`SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'income'` as any[]
     const totalIncome = Number.parseFloat(incomeResult[0].total)
 
     // Total expenses
-    const expenseResult = await sql`SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'expense'`
+    const expenseResult = await sql`SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'expense'` as any[]
     const totalExpenses = Number.parseFloat(expenseResult[0].total)
 
     // Top categories

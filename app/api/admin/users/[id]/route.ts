@@ -33,7 +33,7 @@ export async function PUT(
         SET is_active = ${body.is_active}, updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
         RETURNING id, email, full_name, role, is_active, created_at, updated_at
-      `
+      ` as any[]
     } else if (body.role && !body.hasOwnProperty('is_active')) {
       // Solo actualizar role
       result = await sql`
@@ -41,7 +41,7 @@ export async function PUT(
         SET role = ${body.role}, updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
         RETURNING id, email, full_name, role, is_active, created_at, updated_at
-      `
+      ` as any[]
     } else if (body.hasOwnProperty('is_active') && body.role) {
       // Actualizar ambos
       result = await sql`
@@ -49,7 +49,7 @@ export async function PUT(
         SET is_active = ${body.is_active}, role = ${body.role}, updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
         RETURNING id, email, full_name, role, is_active, created_at, updated_at
-      `
+      ` as any[]
     } else {
       return NextResponse.json({ error: "No fields to update" }, { status: 400 })
     }

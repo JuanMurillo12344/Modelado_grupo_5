@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       SELECT initial_balance 
       FROM monthly_balances 
       WHERE user_id = ${userId} AND year = ${year} AND month = ${month}
-    `
+    ` as any[]
 
     if (existingBalance.length > 0) {
       // Calcular balance disponible = inicial + ingresos - gastos del mes
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         WHERE user_id = ${userId}
           AND EXTRACT(YEAR FROM date) = ${year}
           AND EXTRACT(MONTH FROM date) = ${month}
-      `
+      ` as any[]
 
       const income = parseFloat(transactions[0]?.income || '0')
       const expense = parseFloat(transactions[0]?.expense || '0')
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       WHERE user_id = ${userId}
         AND EXTRACT(YEAR FROM date) = ${year}
         AND EXTRACT(MONTH FROM date) = ${month}
-    `
+    ` as any[]
 
     const currentIncome = parseFloat(currentTransactions[0]?.income || '0')
     const currentExpense = parseFloat(currentTransactions[0]?.expense || '0')

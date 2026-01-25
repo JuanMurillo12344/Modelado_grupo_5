@@ -37,7 +37,7 @@ export async function PUT(
         type = ${type}
       WHERE id = ${id}
       RETURNING *
-    `
+    ` as any[]
 // Verificar si se actualizó alguna fila
     if (result.length === 0) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 })
@@ -64,7 +64,7 @@ export async function DELETE(
     // No permitir eliminar categorías por defecto
     const category = await sql`
       SELECT is_default FROM categories WHERE id = ${id}
-    `
+    ` as any[]
 // Verificar si la categoría existe
     if (category.length > 0 && category[0].is_default) {
       return NextResponse.json({ error: "Cannot delete default category" }, { status: 400 })

@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       INSERT INTO notifications (user_id, type, title, message, icon, is_read, created_at)
       VALUES (${userId}, ${type}, ${title}, ${message}, ${icon || '🔔'}, false, NOW())
       RETURNING *
-    `
+    ` as any[]
 
     return NextResponse.json({ notification: result[0] })
   } catch (error) {
