@@ -9,13 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
@@ -27,28 +24,20 @@ jobs:
           npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          # Forzamos a Next.js a preparar todo para standalone
           NEXT_PRIVATE_STANDALONE: true
 
       - name: Prepare standalone artifact
         run: |
-          # 1. Crear directorios necesarios en la carpeta de destino
-          mkdir -p .next/standalone/.next/static
-          mkdir -p .next/standalone/.next/server
-          
-          # 2. Copiar archivos estáticos y públicos
-          cp -r .next/static/. .next/standalone/.next/static/
-          cp -r public/. .next/standalone/public/ || true
-          
-          # 3. Copiar la lógica del servidor y el manifiesto (Esto corrige tu error)
-          cp -r .next/server/. .next/standalone/.next/server/
-          cp .next/BUILD_ID .next/standalone/BUILD_ID || true
+          # 1. Nos aseguramos de estar en la raíz del build
+          # 2. Copiamos los archivos necesarios para que server.js no se pierda
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public || true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .next/standalone
+          path: .next/standalone # Subimos SOLO el contenido de esta carpeta
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,11 +47,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'finanzasmodelado'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0B1DF4429B334FD2AAAC5E81B481F224 }}
-          package: .
+          package: . # Se despliega en la raíz de Azure
