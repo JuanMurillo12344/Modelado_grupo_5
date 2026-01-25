@@ -5,11 +5,6 @@ const nextConfig = {
   },
   // Esto genera el servidor optimizado para Azure
   output: 'standalone',
-  experimental: {
-    turbopack: {
-      root: './',
-    },
-  },
 };
 
 export default nextConfig;
