@@ -54,11 +54,12 @@ export async function PUT(
       return NextResponse.json({ error: "No fields to update" }, { status: 400 })
     }
 
-    if (result.length === 0) {
+    const resultRows = result as any[]
+    if (resultRows.length === 0) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    return NextResponse.json(result[0], { status: 200 })
+    return NextResponse.json(resultRows[0], { status: 200 })
   } catch (error) {
     console.error("[v0] Update user error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })

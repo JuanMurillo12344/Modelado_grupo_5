@@ -30,7 +30,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     // Verificar que el presupuesto pertenece al usuario
     const existing = await sql`
       SELECT * FROM budgets WHERE id = ${id} AND user_id = ${userId}
-    `
+    ` as any[]
 
     if (existing.length === 0) {
       return NextResponse.json({ error: "Budget not found" }, { status: 404 })
@@ -42,14 +42,14 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       SET amount = ${amount}, period = ${period || "month"}
       WHERE id = ${id} AND user_id = ${userId}
       RETURNING *
-    `
+    ` as any[]
 
     const budget = result[0]
 
     // Obtener nombre de la categoría
     const category = await sql`
       SELECT name FROM categories WHERE id = ${budget.category_id}
-    `
+    ` as any[]
 
     // Crear notificación
     await createNotification({
@@ -81,7 +81,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       SELECT b.*, c.name as category_name FROM budgets b
       LEFT JOIN categories c ON b.category_id = c.id
       WHERE b.id = ${id} AND b.user_id = ${userId}
-    `
+    ` as any[]
 
     if (existing.length === 0) {
       return NextResponse.json({ error: "Budget not found" }, { status: 404 })

@@ -41,7 +41,8 @@ export async function POST(request: NextRequest) {
       RETURNING *
     `
 
-    return NextResponse.json(result[0], { status: 201 })
+    const resultRows = result as any[]
+    return NextResponse.json(resultRows[0], { status: 201 })
   } catch (error) {
     console.error("[v0] Admin create category error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })

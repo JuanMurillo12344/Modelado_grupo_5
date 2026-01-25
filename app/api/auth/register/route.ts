@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
     }
 
-    const existingUser = await sql`SELECT id FROM users WHERE email = ${email}`
+    const existingUser = await sql`SELECT id FROM users WHERE email = ${email}` as any[]
 
     if (existingUser.length > 0) {
       return NextResponse.json({ error: "Email already registered" }, { status: 400 })
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       INSERT INTO users (email, password_hash, full_name) 
       VALUES (${email}, ${passwordHash}, ${fullName || "User"}) 
       RETURNING id, email, full_name
-    `
+    ` as any[]
 
     const user = result[0]
 

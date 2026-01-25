@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
     query = sql`${query} ORDER BY t.date DESC`
 
-    const transactions = await query
+    const transactions = await query as any[]
 
     return NextResponse.json({ transactions })
   } catch (error) {
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       INSERT INTO transactions (user_id, category_id, title, amount, description, type) 
       VALUES (${userId}, ${categoryId}, ${title}, ${amount}, ${description || ""}, ${type}) 
       RETURNING *
-    `
+    ` as any[]
 
     const transaction = result[0]
 
