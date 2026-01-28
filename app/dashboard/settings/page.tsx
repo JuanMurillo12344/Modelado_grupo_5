@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Wallet, Shield } from "lucide-react"
-import { BalanceSettings } from "@/components/balance-settings"
+import { User, Shield } from "lucide-react"
 import { ChangePasswordModal } from "@/components/change-password-modal"
 import { useToast } from "@/hooks/use-toast"
 
@@ -186,14 +185,10 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="profile" className="gap-2">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Perfil</span>
-          </TabsTrigger>
-          <TabsTrigger value="budget" className="gap-2">
-            <Wallet className="h-4 w-4" />
-            <span className="hidden sm:inline">Mi Dinero</span>
           </TabsTrigger>
           <TabsTrigger value="security" className="gap-2">
             <Shield className="h-4 w-4" />
@@ -272,12 +267,6 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="budget" className="space-y-4">
-          {/* Balance Disponible */}
-          <BalanceSettings />
-
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">

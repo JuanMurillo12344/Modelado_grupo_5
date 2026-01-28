@@ -31,47 +31,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
-    // Check if user is already logged in and validate token
+    // Check if user is already logged in and validate token/server cookie
     const validateToken = async () => {
       const storedToken = localStorage.getItem("auth_token")
       const storedUser = localStorage.getItem("auth_user")
 
+      // If we have client-side data, initialize it optimistically
       if (storedToken && storedUser) {
+        setToken(storedToken)
         try {
-          // Validate token by making a test request
-          const response = await fetch("/api/categories")
-          
-          if (response.status === 401) {
-            // Token is invalid, clear everything including cookies
-            localStorage.removeItem("auth_token")
-            localStorage.removeItem("auth_user")
-            
-            // Clear the server-side cookie
-            await fetch("/api/auth/logout", { method: "POST" }).catch(() => {})
-            
-            setToken(null)
-            setUser(null)
-            setIsLoading(false)
-            
-            // Force immediate redirect with full page reload
-            window.location.href = "/login"
-            return
-          } else {
-            // Token is valid
-            setToken(storedToken)
-            setUser(JSON.parse(storedUser))
-          }
-        } catch (err) {
-          console.error("Error validating token:", err)
-          // Clear invalid data
+          setUser(JSON.parse(storedUser))
+        } catch {
+          setUser(null)
+        }
+      }
+
+      try {
+        // Prefer server-side validation via cookie by requesting the current user
+        const resp = await fetch("/api/users/me")
+        if (resp.status === 200) {
+          const data = await resp.json()
+          setUser(data.user)
+          // keep localStorage in sync
+          localStorage.setItem("auth_user", JSON.stringify(data.user))
+        } else if (resp.status === 401) {
+          // Not authorized on server, clear both client and server state
           localStorage.removeItem("auth_token")
           localStorage.removeItem("auth_user")
           await fetch("/api/auth/logout", { method: "POST" }).catch(() => {})
           setToken(null)
           setUser(null)
         }
+      } catch (err) {
+        console.error("Error validating server session:", err)
+        // If server check fails (network), keep optimistic client-side state if any
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }
 
     validateToken()

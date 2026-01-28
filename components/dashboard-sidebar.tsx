@@ -24,7 +24,8 @@ import {
   X,
   Bell,
   Users,
-  BarChart3
+  BarChart3,
+  TrendingUp
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -40,9 +41,9 @@ const navigation = [
     icon: ArrowUpDown,
   },
   {
-    name: "Presupuestos",
-    href: "/dashboard/budgets",
-    icon: Wallet,
+    name: "Presupuesto",
+    href: "/dashboard/budget-config",
+    icon: TrendingUp,
   },
   {
     name: "Reportes",

@@ -1,357 +1,298 @@
 # FinanzApp - Gestor de Finanzas Personales
 
-Una aplicación web completa para gestionar tus finanzas personales. Construida con Next.js 16, React 19, TypeScript, Tailwind CSS 4 y PostgreSQL (Neon).
+Una aplicación web completa para gestionar tus finanzas personales, especialmente diseñada para estudiantes universitarios. Construida con **Next.js 16**, **React 19**, **TypeScript**, **Tailwind CSS 4** y **PostgreSQL (Neon)**.
+
+---
 
 ## 🚀 Características Principales
 
-### 💰 Gestión Financiera
-- ✅ **Dashboard completo** - Visualiza balance, ingresos, gastos y tendencias
-- ✅ **Transacciones** - Crea, edita y elimina transacciones con facilidad
-- ✅ **Categorización inteligente** - 13 categorías predefinidas (alimentación, transporte, educación, etc.)
-- ✅ **Presupuestos** - Define presupuestos mensuales/semanales por categoría
-- ✅ **Alertas automáticas** - Notificaciones cuando excedes el 80% del presupuesto
+### 💰 Gestión Financiera Completa
+- **Dashboard personalizado** - Balance, ingresos, gastos y tendencias en tiempo real
+- **Transacciones** - Crear, editar y eliminar transacciones fácilmente
+- **13 Categorías predefinidas** - Alimentación, transporte, vivienda, educación, salud, entretenimiento y más
+- **Presupuestos inteligentes** - Define presupuestos fijos por categoría
+- **Validación de gastos** - Bloquea gastos si no hay dinero disponible
 
-### 📊 Visualización y Reportes
-- ✅ **8 tipos de gráficos** - Ingresos, gastos, balance, tendencias, comparaciones, actividad diaria
-- ✅ **Reportes detallados** - 4 pestañas (General, Ingresos, Gastos, Tendencias)
-- ✅ **Comparación de períodos** - Compara mes actual vs mes anterior con indicadores inteligentes
-- ✅ **Ranking de categorías** - Top categorías de ingresos y gastos
-- ✅ **Análisis de tendencias** - Visualiza todos los meses con datos históricos
+### 📊 Visualización y Análisis
+- **8 tipos de gráficos** - Ingresos, gastos, balance, tendencias y comparaciones
+- **4 pestañas de reportes** - General, Ingresos, Gastos y Tendencias mensuales
+- **Comparación inteligente** - Mes actual vs mes anterior con indicadores
+- **Ranking de categorías** - Top categorías de ingresos y gastos
+- **Histórico completo** - Visualiza datos de todos los meses
 
-### 🔔 Sistema de Notificaciones
-- ✅ **Notificaciones en tiempo real** - Toast inmediatos al crear/editar/eliminar
-- ✅ **Centro de notificaciones** - Historial completo con filtros (leídas/no leídas)
-- ✅ **Badge inteligente** - Contador de notificaciones no leídas en sidebar
-- ✅ **8 tipos de notificaciones** - Gastos, ingresos, presupuestos, alertas con colores y emojis
-- ✅ **Notificaciones persistentes** - Base de datos con índices optimizados
+### 🔔 Notificaciones Inteligentes
+- **Alertas en tiempo real** - Toast inmediatos al crear/editar transacciones
+- **Centro de notificaciones** - Historial completo con filtros
+- **8 tipos de alertas** - Gastos, ingresos, presupuestos excedidos, etc.
+- **Badge dinámico** - Contador de notificaciones no leídas
 
-### 👥 Administración
-- ✅ **Panel de administrador** - Dashboard con estadísticas globales
-- ✅ **Gestión de usuarios** - Crear, editar, desactivar usuarios
-- ✅ **Gestión de categorías** - Categorías globales y personalizadas
-- ✅ **Estadísticas completas** - Total usuarios, transacciones, volumen
+### 👥 Administración Completa
+- **Panel de administrador** - Estadísticas globales y gestión del sistema
+- **Gestión de usuarios** - Crear, editar y desactivar usuarios
+- **Categorías personalizables** - Agregar y personalizar categorías
+- **Auditoría** - Seguimiento de cambios en el sistema
 
-### 🎨 Experiencia de Usuario
-- ✅ **Tema oscuro/claro** - Cambio suave con persistencia
-- ✅ **100% Responsive** - Optimizado para móvil, tablet y desktop
-- ✅ **Sidebar colapsable** - Maximiza espacio en pantallas pequeñas
-- ✅ **Iconos y colores** - Interfaz visual e intuitiva con emojis y colores contextuales
+### 🎨 Experiencia Premium
+- **Tema oscuro/claro** - Cambio suave y persistente
+- **100% Responsive** - Optimizado para móvil, tablet y desktop
+- **Interfaz intuitiva** - Diseño limpio con iconos y colores contextuales
+- **Navegación fluida** - Experiencia de usuario perfecta
+
+---
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend**: React 19, Next.js 16 (App Router)
-- **Styling**: Tailwind CSS v4.1.9, shadcn/ui, Radix UI
-- **Charts**: Recharts para visualizaciones
-- **Backend**: Next.js API Routes (TypeScript)
-- **Database**: PostgreSQL (Neon Serverless)
-- **ORM/Query**: @neondatabase/serverless con SQL tagged templates
-- **Authentication**: Cookie-based (httpOnly) con tokens base64
-- **Dates**: date-fns v4 con localización en español
-- **Icons**: Lucide React
-- **Deployment**: Vercel Ready
+| Capa | Tecnología |
+|------|-----------|
+| **Frontend** | React 19, Next.js 16 (App Router), TypeScript |
+| **Styling** | Tailwind CSS v4.1.9, shadcn/ui, Radix UI |
+| **Gráficos** | Recharts para visualizaciones interactivas |
+| **Backend** | Next.js API Routes con TypeScript |
+| **Database** | PostgreSQL (Neon Serverless SQL) |
+| **Autenticación** | Cookie-based (httpOnly) con tokens base64 |
+| **Fechas** | date-fns v4 con localización español |
+| **Icons** | Lucide React (150+ iconos) |
+| **Deployment** | Vercel Ready |
+
+---
 
 ## 📋 Requisitos Previos
 
-1. Node.js 18+ y npm/yarn
-2. Cuenta de Neon PostgreSQL
-3. Variables de entorno configuradas
+- **Node.js** 18+ (npm, yarn o pnpm)
+- **Cuenta Neon** - Base de datos PostgreSQL gratuita
+- **.env.local** - Variables de entorno configuradas
 
-## 🔧 Instalación
+---
+
+## 🔧 Instalación Rápida
 
 ### 1. Clonar el repositorio
-
-\`\`\`bash
+```bash
 git clone <repository-url>
-cd finanzapp
-\`\`\`
+cd Modelado_grupo_5
+```
 
 ### 2. Instalar dependencias
-
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+# o
+pnpm install
+```
 
 ### 3. Configurar variables de entorno
 
-Crea un archivo `.env.local` en la raíz del proyecto:
+Crea `.env.local` en la raíz:
+```bash
+DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+```
 
-\`\`\`bash
-DATABASE_URL=postgresql://user:password@host:port/database
-\`\`\`
+### 4. Ejecutar migraciones
+```bash
+# Copiar contenido de scripts/Database.sql
+# Ejecutar en el editor SQL de Neon Dashboard
+```
 
-### 4. Ejecutar migraciones de base de datos
-
-Ejecuta el script de inicialización en tu cliente Neon:
-
-\`\`\`bash
-# Copiar el contenido de scripts/init-database.sql
-# y ejecutarlo en el editor SQL de Neon
-\`\`\`
-
-### 5. Ejecutar la aplicación en desarrollo
-
-\`\`\`bash
+### 5. Iniciar servidor de desarrollo
+```bash
 npm run dev
-\`\`\`
+# o
+pnpm dev
+```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+Abre [http://localhost:3000](http://localhost:3000) ✨
+
+---
 
 ## 👤 Cuentas de Prueba
 
-Para probar la aplicación, puedes crear nuevas cuentas o usar estas credenciales de ejemplo:
+### Estudiante
+- **Email**: `estudiante@example.com`
+- **Contraseña**: `password123`
 
-### Usuario Regular
-- Email: `renato@gmail.com`
-- Password: `juanito`
+### Administrador
+- **Email**: `admin@example.com`
+- **Contraseña**: `admin123`
 
-### Admin
-- Email: `admin@finanzapp.com`
-- Password: `Admin123!`
+---
 
-## 📱 Uso
+## 📱 Estructura de la Aplicación
 
-### Para Usuarios Regulares
+### Páginas Principales
 
-1. **Registrarse** - Ve a `/register` y crea una nueva cuenta
-2. **Iniciar sesión** - Ve a `/login` con tus credenciales
-3. **Dashboard** - Visualiza tu balance actual e historial de transacciones
-4. **Agregar transacción** - Usa el formulario para añadir ingresos o gastos
-5. **Navegar meses** - Usa las flechas para ver diferentes meses
-6. **Cambiar tema** - Click en el botón de sol/luna en la esquina superior derecha
+| Página | Descripción |
+|--------|-----------|
+| `/` | Landing page con funcionalidades |
+| `/login` | Inicio de sesión |
+| `/register` | Registro de nuevos usuarios |
+| `/dashboard` | Dashboard principal (balance, gráficos) |
+| `/dashboard/transactions` | Registro y historial de transacciones |
+| `/dashboard/budgets` | Gestión de presupuestos fijos |
+| `/dashboard/budget-config` | Configuración presupuesto mensual |
+| `/dashboard/reports` | Reportes detallados |
+| `/dashboard/settings` | Configuración de perfil y seguridad |
+| `/dashboard/admin` | Panel de administrador |
 
-### Para Administradores
+### Funcionalidades Clave
 
-1. **Acceder panel admin** - Inicia sesión con una cuenta admin
-2. **Ver estadísticas** - Dashboard muestra estadísticas globales
-3. **Gestionar usuarios** - Pestaña "Usuarios" para ver todos los usuarios
-4. **Gestionar categorías** - Pestaña "Categorías" para crear y ver categorías
+**Dashboard**
+- Tarjeta de balance disponible
+- Análisis de IA del mes
+- Presupuesto mensual con estado por categoría
+- Transacciones recientes
 
-## 🗄️ Estructura de Base de Datos
+**Transacciones**
+- Formulario rápido con validación
+- Sugerencias de IA al registrar gastos
+- Historial con filtros
+- Editar/eliminar transacciones
+
+**Presupuestos**
+- Asignar presupuesto fijo por categoría
+- Editar y eliminar presupuestos
+- Visualizar estado en tiempo real
+- Bloquear gastos si no hay dinero
+
+**Reportes**
+- Comparación de períodos
+- Análisis por categoría
+- Tendencias históricas
+- Descargar datos
+
+---
+
+## 🤖 IA Integrada (Claude Haiku)
+
+La app incluye un asistente de IA que:
+- **Sugiere distribución de presupuesto** según patrones de gasto
+- **Analiza gastos individuales** en tiempo real
+- **Proporciona insights mensuales** personalizados
+- **Advierte sobre excesos** de presupuesto
+- **Felicita por buen control** financiero
+
+---
+
+## 🔒 Seguridad
+
+- ✅ Contraseñas hasheadas (bcrypt)
+- ✅ Cookies seguras (httpOnly, sameSite)
+- ✅ Protección CSRF integrada
+- ✅ Validación en frontend y backend
+- ✅ Autorización por rol (user/admin)
+
+---
+
+## 📊 Base de Datos
 
 ### Tablas Principales
-
-- **users** - Usuarios con roles (user/admin), presupuesto mensual, moneda preferida
-- **categories** - 13 categorías predefinidas + personalizadas (con iconos y colores)
-- **transactions** - Transacciones con título, monto, descripción, tipo y fecha
-- **budgets** - Presupuestos por categoría (mensual/semanal) con alertas al 80%
-- **alerts** - Sistema de alertas para presupuestos excedidos
-- **notifications** - Historial completo de notificaciones con 8 tipos
+- **users** - Usuarios con roles y datos personales
+- **transactions** - Ingresos y gastos con categoría
+- **categories** - 13 categorías predefinidas + custom
+- **budgets** - Presupuestos fijos por categoría
+- **monthly_budget_config** - Configuración presupuesto mensual
+- **budget_category_distribution** - Distribución por categoría
+- **notifications** - Historial de 8 tipos de notificaciones
+- **alerts** - Sistema de alertas cuando se excede presupuesto
 
 ### Vistas Optimizadas
-
-- **v_transaction_summary** - Vista completa de transacciones con categorías
-- **v_budget_alerts** - Vista para monitoreo de presupuestos en tiempo real
+- `v_transaction_summary` - Transacciones con categoría
+- `v_budget_alerts` - Monitoreo de presupuestos
 
 ### Índices de Rendimiento
+10+ índices estratégicos para consultas rápidas (user_id, date, type, is_read, etc.)
 
-10 índices estratégicos para optimizar consultas frecuentes (user_id, date, type, is_read, etc.)
+---
 
-## 🔐 Seguridad
+## 🎯 Casos de Uso
 
-- ✅ **Contraseñas hasheadas** - SHA-256 con salt
-- ✅ **Cookies HttpOnly** - Tokens de autenticación seguros (base64 JSON)
-- ✅ **Protección de rutas** - Middleware para validar autenticación
-- ✅ **Validación en servidor** - Todas las entradas validadas
-- ✅ **SQL Injection Prevention** - Uso de prepared statements (tagged templates)
-- ✅ **CORS configurado** - Protección contra peticiones no autorizadas
-- ✅ **Roles y permisos** - Separación admin/user
-- ✅ **CASCADE on DELETE** - Integridad referencial en DB
+### Para Estudiantes Universitarios Foráneos
+1. **Distribución inteligente** - IA sugiere cómo distribuir el dinero
+2. **Control mensual** - Sabe cuánto tiene y cuánto puede gastar
+3. **Alertas preventivas** - Se entera cuando se está pasando
+4. **Ahorros automáticos** - Define cuánto ahorrar cada mes
+5. **Análisis mensual** - Entiende en qué gastó más
 
-## 🎨 Temas
+### Para Administradores
+1. **Ver estadísticas globales** - Total usuarios, transacciones, volumen
+2. **Gestionar usuarios** - Crear, editar, desactivar
+3. **Configurar categorías** - Personalizar según necesidades
+4. **Auditoría completa** - Seguimiento de cambios
 
-La aplicación soporta:
-- **Modo Claro** - Interfaz clara y limpia
-- **Modo Oscuro** - Interfaz oscura para luz baja
-- **Sistema** - Adapta al tema del sistema operativo
+---
 
-## 📦 Construcción para Producción
+## 🚀 Deployment
 
-\`\`\`bash
+### En Vercel (Recomendado)
+```bash
+# Conectar repositorio GitHub
+# Definir DATABASE_URL en variables de entorno
+# Deploy automático en cada push
+```
+
+### En tu servidor
+```bash
 npm run build
-npm start
-\`\`\`
+npm run start
+```
 
-## 🚀 Deployment en Vercel
+---
 
-1. Push tu código a GitHub
-2. Ve a [vercel.com](https://vercel.com)
-3. Conecta tu repositorio GitHub
-4. Configura las variables de entorno
-5. Deploy automático en cada push
+## 📝 Variables de Entorno
 
-## 📄 API Endpoints
+```env
+# Base de datos (REQUERIDO)
+DATABASE_URL=postgresql://user:password@host/db
 
-### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Inicio de sesión
+# Secreto para cookies (opcional, pero recomendado)
+JWT_SECRET=tu-secreto-aleatorio-aqui
+```
 
-### Transacciones
-- `GET /api/transactions` - Obtener transacciones (con filtros: mes, año, categoría, tipo, rango)
-- `POST /api/transactions` - Crear transacción (+ notificación automática)
-- `PUT /api/transactions/[id]` - Actualizar transacción (+ notificación)
-- `DELETE /api/transactions/[id]` - Eliminar transacción (+ notificación)
+---
 
-### Presupuestos
-- `GET /api/budgets` - Obtener presupuestos del usuario
-- `POST /api/budgets` - Crear presupuesto (+ notificación)
-- `PUT /api/budgets/[id]` - Actualizar presupuesto (+ notificación)
-- `DELETE /api/budgets/[id]` - Eliminar presupuesto (+ notificación)
-- `GET /api/budgets/check` - Verificar alertas de presupuestos (+ notificación si excede)
+## 🐛 Resolución de Problemas
 
-### Notificaciones
-- `GET /api/notifications` - Obtener notificaciones (con filtro ?unread=true)
-- `POST /api/notifications` - Crear notificación (uso interno)
-- `PATCH /api/notifications` - Marcar como leída (individual o todas)
+### "Presupuesto no configurado"
+→ Ve a `/dashboard/budget-config` y configura tu presupuesto mensual
 
-### Categorías
-- `GET /api/categories` - Obtener categorías del usuario
+### "No puedo registrar gastos"
+→ Verifica que tengas:
+- Presupuesto configurado
+- Al menos un ingreso registrado
+- Dinero disponible en el mes
 
-### Dashboard
-- `GET /api/dashboard/summary` - Resumen del mes (con transactionCount, avgTransaction, byCategory)
-- `GET /api/dashboard/monthly-trends` - Tendencias mensuales históricas
-- `GET /api/dashboard/daily-activity` - Actividad diaria del mes
+### Errores de conexión a base de datos
+→ Verifica que `DATABASE_URL` esté correcta en `.env.local`
 
-### Admin
-- `GET /api/admin/users` - Listar todos los usuarios
-- `PATCH /api/admin/users/[id]` - Actualizar usuario (activar/desactivar, cambiar rol)
-- `GET /api/admin/categories` - Listar categorías globales
-- `POST /api/admin/categories` - Crear categoría global
-- `GET /api/admin/stats` - Estadísticas globales
+### El servidor no inicia
+→ Ejecuta `npm install` nuevamente
 
-## 🤝 Contribuir
+---
+
+## 📄 Licencia
+
+MIT License - Libre para usar y modificar
+
+---
+
+## 👨‍💻 Contribuciones
 
 Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+1. Fork el repositorio
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Licencia
-
-Este proyecto está bajo la licencia MIT.
-
-##   Documentación Adicional
-
-- **SETUP.md** - Guía completa de instalación paso a paso
-- **FEATURES.md** - Lista detallada de todas las funcionalidades
-- **NOTIFICATIONS.md** - Documentación del sistema de notificaciones
-- **scripts/init-database.sql** - Schema completo de la base de datos
-
-## 🎨 Componentes Principales
-
-### Gráficos y Visualización (8 componentes)
-- `expense-chart.tsx` - Distribución de gastos por categoría (Pie Chart)
-- `income-chart.tsx` - Distribución de ingresos por categoría (Pie Chart)
-- `balance-overview.tsx` - Balance general del mes (Bar Chart)
-- `period-comparison.tsx` - Comparación mes actual vs anterior (3 indicadores inteligentes)
-- `monthly-trend.tsx` - Tendencias históricas todos los meses (Bar Chart lado a lado)
-- `daily-activity-chart.tsx` - Actividad diaria del mes (Line Chart)
-- `top-categories-ranking.tsx` - Top 5 categorías por monto (Lista con barras)
-- `quick-stats-cards.tsx` - Tarjetas resumen (Total, Promedio, Cantidad)
-
-### Gestión (7 componentes)
-- `transaction-form.tsx` - Formulario crear transacciones
-- `transactions-list.tsx` - Lista editable de transacciones
-- `budget-manager.tsx` - Gestión completa de presupuestos
-- `budget-alerts.tsx` - Alertas visuales de presupuestos
-- `budget-notifications.tsx` - Sistema de alertas cada 2 minutos
-- `notification-center.tsx` - Centro de notificaciones con historial
-- `dashboard-sidebar.tsx` - Sidebar con navegación y badge de notificaciones
-
-### Administración (4 componentes)
-- `admin-header.tsx` - Header del panel admin
-- `admin-stats.tsx` - Estadísticas globales
-- `admin-users-tab.tsx` - Gestión de usuarios
-- `admin-categories-tab.tsx` - Gestión de categorías
-
-## 🔑 Características Destacadas
-
-### Sistema Inteligente de Comparaciones
-Los indicadores de comparación de períodos tienen lógica contextual:
-- **Ingresos**: ↑ Verde (aumento es bueno), ↓ Rojo (disminución es malo)
-- **Gastos**: ↑ Rojo (aumento es malo), ↓ Verde (disminución es bueno)
-- **Balance**: Siempre muestra el cambio neto
-
-### Notificaciones en Tiempo Real
-- **Toast inmediato** al realizar cualquier acción
-- **Sin duplicados** - Solo 1 notificación por acción
-- **Colores contextuales** - Rojo para gastos/eliminaciones, verde para ingresos
-- **Emojis visuales** - 💸 gastos, 💰 ingresos, ✏️ edición, 🗑️ eliminación
-- **Historial persistente** en base de datos
-
-### Gráficos Avanzados
-- **Todos los meses** - MonthlyTrend muestra todos los meses con datos, no solo los últimos 6
-- **Barras lado a lado** - Ingresos y gastos crecen juntos hacia arriba
-- **Sin duplicados** - Dashboard = vista rápida, Reportes = análisis detallado
-- **Responsive** - Se adaptan a móvil, tablet y desktop
-
-### Presupuestos Inteligentes
-- **Alertas automáticas** al 80% del presupuesto
-- **Notificación única** por mes cuando se excede el 100%
-- **Verificación cada 2 minutos** en tiempo real
-- **Indicador visual** con barra de progreso y porcentaje
-
-## 🏗️ Arquitectura
-
-### Frontend
-- **React 19** con Server Components y Client Components
-- **Next.js 16** App Router con rutas paralelas
-- **TypeScript** estricto con tipos explícitos
-- **Tailwind CSS 4** con custom theme
-- **Context API** para estado global (Auth, Theme, Notifications, BudgetAlerts)
-
-### Backend
-- **API Routes** con Next.js
-- **Async/Await** para todas las operaciones
-- **Tagged Templates** para SQL seguro
-- **Error Handling** completo con try-catch
-- **Validación** en cada endpoint
-
-### Base de Datos
-- **PostgreSQL** en Neon Serverless
-- **6 tablas** principales con relaciones
-- **2 vistas** optimizadas
-- **10 índices** estratégicos
-- **SERIAL** para IDs autoincrementales
-- **CASCADE** para integridad referencial
-
-## 🎓 Casos de Uso
-
-### Para Estudiantes
-- Control de gastos mensuales de alimentación, transporte y entretenimiento
-- Seguimiento de ingresos por becas, trabajos part-time o mesadas
-- Presupuestos para gestionar dinero limitado
-- Reportes para identificar en qué se gasta más
-
-### Para Freelancers
-- Seguimiento de ingresos por proyectos
-- Control de gastos operativos
-- Presupuestos por categoría de negocio
-- Análisis de tendencias mensuales
-
-### Para Familias
-- Gestión conjunta de finanzas del hogar
-- Presupuestos por categoría (alimentación, servicios, educación)
-- Alertas cuando se exceden límites
-- Reportes mensuales para tomar decisiones
-
-<<<<<<< HEAD
-## 👨‍💻 Autor
-
-Desarrollado por Grupo 5
-
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-1. Fork el proyecto
-2. Crea una rama feature (\`git checkout -b feature/AmazingFeature\`)
-3. Commit tus cambios (\`git commit -m 'Add AmazingFeature'\`)
-4. Push a la rama (\`git push origin feature/AmazingFeature\`)
 5. Abre un Pull Request
 
 ---
 
-**¡Gestiona tus finanzas de manera inteligente con FinanzApp!** 💰📊✨
+## 📞 Soporte
+
+¿Preguntas o problemas? 
+- Abre un issue en GitHub
+- Revisa la documentación en `/docs`
+- Contacta al equipo de desarrollo
+
+---
+
+**Última actualización**: 27 de Enero de 2026  
+**Versión**: 1.0.0  
+**Estado**: ✅ Producción

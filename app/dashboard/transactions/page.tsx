@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { TransactionsList } from "@/components/transactions-list"
 import { TransactionForm } from "@/components/transaction-form"
+import { useMonth } from "@/contexts/month-context"
 import { TransactionFilters, type FilterValues } from "@/components/transaction-filters"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -22,6 +23,8 @@ export default function TransactionsPage() {
     setFilters(newFilters)
   }
 
+  const { month, year } = useMonth()
+
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -40,7 +43,7 @@ export default function TransactionsPage() {
             <DialogHeader>
               <DialogTitle>Nueva Transacción</DialogTitle>
             </DialogHeader>
-            <TransactionForm onSuccess={handleTransactionSuccess} />
+            <TransactionForm month={month} year={year} onSuccess={handleTransactionSuccess} />
           </DialogContent>
         </Dialog>
       </div>
